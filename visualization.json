@@ -1,0 +1,106 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "Traffic Incidents Analysis",
+  "data": {
+    "url": "https://raw.githubusercontent.com/sheriefAbdallah/CS318/refs/heads/main/Traffic_Incidents.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "vconcat": [
+    {
+      "encoding": {
+        "color": {
+          "condition": {
+            "param": "brush",
+            "title": "Incident Type",
+            "field": "acci_name",
+            "type": "nominal",
+            "scale": {
+              "scheme": "category20"
+            }
+          },
+          "value": "lightgray"
+        },
+        "x": {
+          "field": "acci_time",
+          "timeUnit": "month",
+          "title": "Date"
+        },
+        "y": {
+          "title": "Number of Incidents",
+          "aggregate": "count",
+          "type": "quantitative"
+        }
+      },
+      "width": 600,
+      "height": 500,
+      "mark": "point",
+      "params": [
+        {
+          "name": "brush",
+          "select": {
+            "type": "interval",
+            "encodings": ["x"]
+          }
+        }
+      ],
+      "transform": [
+        {
+          "filter": {
+            "and": [
+              { "not": { "field": "acci_name", "equal": "مركبه عطلانه في الشارع - بسيط" } },
+              { "not": { "field": "acci_name", "equal": "الوقوف خلف المركبات (دبل بارك) - بسيط" } }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "encoding": {
+        "color": {
+          "field": "acci_name",
+          "type": "nominal",
+          "scale": {
+            "scheme": "category20"
+          }
+        },
+        "x": {
+          "aggregate": "count"
+        },
+        "y": {
+          "title": "Incident Type",
+          "field": "acci_name",
+          "type": "nominal",
+          "sort": "-x"
+        }
+      },
+      "width": 600,
+      "mark": "bar",
+      "params": [
+        {
+          "name": "click",
+          "select": {
+            "type": "point",
+            "encodings": ["color"]
+          }
+        }
+      ],
+      "transform": [
+        {
+          "filter": {
+            "param": "brush"
+          }
+        },
+        {
+          "filter": {
+            "and": [
+              { "not": { "field": "acci_name", "equal": "مركبه عطلانه في الشارع - بسيط" } },
+              { "not": { "field": "acci_name", "equal": "الوقوف خلف المركبات (دبل بارك) - بسيط" } }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
